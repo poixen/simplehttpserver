@@ -7,7 +7,7 @@ This is a simple http server written in Java for handling GET and POST resquests
 
 # Setup on linux
 Once you have cloned the project to a server you can browse to the root dir and type
-`git clean test`
+`mvn clean test`
 This will check to see if all tests are running ok.
 After that you can run
 `mvn exec:java`
