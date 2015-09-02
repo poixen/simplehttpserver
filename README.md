@@ -36,3 +36,6 @@ Add a new counter
 In the header data
 `key: insertcounternamehere`
 If there is a problem with adding the new counter, you will be informed.
+
+#Travis
+The project now has Travis support. You can view it [here](https://travis-ci.org/poixen/simplehttpserver).
