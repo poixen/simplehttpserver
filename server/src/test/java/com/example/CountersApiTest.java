@@ -1,11 +1,10 @@
 package com.example;
 
 import org.glassfish.grizzly.http.server.HttpServer;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
@@ -24,6 +23,9 @@ public class CountersApiTest {
 
     private HttpServer server;
     private WebTarget target;
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Before
     public void setUp() throws Exception {
@@ -174,6 +176,20 @@ public class CountersApiTest {
 
         // then
         assertEquals("No counter called: invalidname", responseMsg);
+    }
+
+
+    @Test
+    public void shouldReturn404StatusCode() {
+        // given
+        Counters.loadPersistantData();
+        expectedException.expect(NotFoundException.class);
+        expectedException.expectMessage("HTTP 404 Not Found");
+
+        // when
+        target.path("counters/get/incremant").queryParam("key", "invalidname").request().get(String.class);
+
+        // then
     }
 
 
