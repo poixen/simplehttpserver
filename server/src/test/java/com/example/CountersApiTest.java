@@ -53,6 +53,7 @@ public class CountersApiTest {
 
         // then
         assertEquals("2", ent);
+        assertEquals(200, responseMsg.getStatus());
     }
 
 
@@ -66,7 +67,7 @@ public class CountersApiTest {
 
         // then
         assertEquals("No counter called: invalidname", ent);
-
+        assertEquals(200, responseMsg.getStatus());
     }
 
 
@@ -80,6 +81,7 @@ public class CountersApiTest {
         // then
         String ent = responseMsg.readEntity(String.class);
         assertEquals("Successfully added counter name: 'counterb'.", ent);
+        assertEquals(200, responseMsg.getStatus());
     }
 
 
@@ -94,6 +96,7 @@ public class CountersApiTest {
         // then
         String ent = responseMsg.readEntity(String.class);
         assertEquals("Counter name: 'visits' is already in use.", ent);
+        assertEquals(200, responseMsg.getStatus());
     }
 
 
@@ -107,6 +110,7 @@ public class CountersApiTest {
         // then
         String ent = responseMsg.readEntity(String.class);
         assertEquals("Parameter can not be null or empty", ent);
+        assertEquals(200, responseMsg.getStatus());
     }
 
 
@@ -120,6 +124,7 @@ public class CountersApiTest {
         // then
         String ent = responseMsg.readEntity(String.class);
         assertEquals("Parameter can not be null or empty", ent);
+        assertEquals(200, responseMsg.getStatus());
     }
 
 
@@ -134,6 +139,7 @@ public class CountersApiTest {
         response = target.path("counters/increase").request().header("key", "counterc").post(Entity.text("Code:200"));
         ent = response.readEntity(String.class);
         assertEquals("1", ent);
+        assertEquals(200, response.getStatus());
 
         // when
         String responseMsg = target.path("counters").request().get(String.class);
@@ -141,6 +147,7 @@ public class CountersApiTest {
         // then
         assertTrue(responseMsg.contains("counterc=1"));
         assertTrue(responseMsg.contains("visits=0"));
+        assertEquals(200, response.getStatus());
     }
 
 
