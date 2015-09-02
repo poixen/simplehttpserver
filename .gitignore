@@ -1,0 +1,5 @@
+*.class
+simple-service/simple-service.iml
+*.xml
+simple-service/.idea/.name
+*.txt
