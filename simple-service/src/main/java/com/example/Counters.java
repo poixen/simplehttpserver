@@ -16,6 +16,7 @@ public class Counters {
      */
     public static void loadPersistantData() {
         // can load from a db or any other source here
+        // for now we just add a default value
         counters.put("visits", 0);
     }
 
