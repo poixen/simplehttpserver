@@ -29,8 +29,16 @@
             <groupId>org.glassfish.jersey</groupId>
             <artifactId>jersey-bom</artifactId>
             <type>pom</type>
-        <scope>import</scope>
-    </dependency>
+            <scope>import</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.media</groupId>
+            <artifactId>jersey-media-moxy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

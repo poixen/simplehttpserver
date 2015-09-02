@@ -4,6 +4,7 @@ import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
+import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -159,10 +160,11 @@ public class CountersApiTest {
         Counters.loadPersistantData();
 
         // when
-        String responseMsg = target.path("counters/get").queryParam("key", "visits").request().get(String.class);
+        CounterBean responseMsg = target.path("counters/get").queryParam("key", "visits").request().get(CounterBean.class);
 
         // then
-        assertEquals("0", responseMsg);
+        assertEquals("visits", responseMsg.name);
+        assertEquals(0, responseMsg.count);
     }
 
 
@@ -170,12 +172,14 @@ public class CountersApiTest {
     public void shouldReturnInvalidMessageOnGettingCounter() {
         // given
         Counters.loadPersistantData();
+        expectedException.expect(InternalServerErrorException.class);
+        expectedException.expectMessage("HTTP 500 Request failed.");
 
         // when
-        String responseMsg = target.path("counters/get").queryParam("key", "invalidname").request().get(String.class);
+        target.path("counters/get").queryParam("key", "invalidname").request().get(CounterBean.class);
 
         // then
-        assertEquals("No counter called: invalidname", responseMsg);
+
     }
 
 

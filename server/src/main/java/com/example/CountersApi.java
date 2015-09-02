@@ -13,12 +13,12 @@ public class CountersApi {
 
     /**
      * <b>Post method.</b><br>
-     * Returns the value mapped to {@code key} increased by one.<br>
+     * Returns the count mapped to {@code key} increased by one.<br>
      * If no {@code key} was found then an invalid message will
      * be returned.
      *
      * @param key the name of the counter to increase
-     * @return the value mapped to {@code key} increased by one,
+     * @return the count mapped to {@code key} increased by one,
      * or an invalid message.
      */
     @POST
@@ -79,17 +79,9 @@ public class CountersApi {
 
     @Path("/get")
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
-    public String getCounter(@QueryParam("key") String key) {
-        if (!isValidParameter(key)) {
-            return "Parameter can not be null or empty";
-        }
-
-        if (Counters.containsKey(key)) {
-            return Integer.toString(Counters.get(key));
-        }
-
-        return "No counter called: " + key;
+    @Produces(MediaType.APPLICATION_JSON)
+    public CounterBean getCounter(@QueryParam("key") String key) {
+        return new CounterBean(key, Counters.get(key));
     }
 
 
