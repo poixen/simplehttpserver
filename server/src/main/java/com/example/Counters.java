@@ -47,9 +47,9 @@ public class Counters {
 
 
     /**
-     * Returns the value mapped to the passed in {@code key}
+     * Returns the count mapped to the passed in {@code key}
      *
-     * @return the value mapped to the key. If no key exists
+     * @return the count mapped to the key. If no key exists
      * then null will be returned as-per the {@link ConcurrentHashMap} API.
      */
     public static Integer get(final String key) {
@@ -61,8 +61,8 @@ public class Counters {
      * Adds an entry to the collection. For more infomation look
      * at the {@link ConcurrentHashMap} Documentation.
      *
-     * @param key   key the value will be mapped to
-     * @param value value to store
+     * @param key   key the count will be mapped to
+     * @param value count to store
      */
     public static void put(final String key, final int value) {
         counters.put(key, value);
