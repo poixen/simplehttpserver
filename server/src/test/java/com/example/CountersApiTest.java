@@ -173,7 +173,7 @@ public class CountersApiTest {
         Counters.loadPersistentData();
 
         // when
-        String resp = target.path("counters/get").queryParam("key", "visits").request().get(String.class);
+        String resp = target.path("counters/get/visits").request().get(String.class);
 
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -191,12 +191,11 @@ public class CountersApiTest {
     public void shouldReturnNullOnGettingCounter() {
         // given
         Counters.loadPersistentData();
+        expectedException.expect(NotFoundException.class);
+        expectedException.expectMessage("HTTP 404 Not Found");
 
         // when
-        String resp = target.path("counters/get").queryParam("key", "invalidname").request().get(String.class);
-
-        // then
-        assertEquals("null", resp);
+        target.path("counters/get").queryParam("key", "invalidname").request().get(String.class);
     }
 
 
