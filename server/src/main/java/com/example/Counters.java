@@ -15,7 +15,7 @@ public class Counters {
     /**
      * Loads persistent data into the container
      */
-    public static void loadPersistantData() {
+    public static void loadPersistentData() {
         // can load from a db or any other source here
         counters.put("visits", new CounterBean("visits", 0));
     }

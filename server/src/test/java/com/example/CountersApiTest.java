@@ -2,14 +2,11 @@ package com.example;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.google.gson.reflect.TypeToken;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
 
-import javax.ws.rs.InternalServerErrorException;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -19,7 +16,6 @@ import javax.ws.rs.core.Response;
 
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.concurrent.ConcurrentMap;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -55,7 +51,7 @@ public class CountersApiTest {
     @Test
     public void shouldIncreaseCounters() {
         // given
-        Counters.loadPersistantData();
+        Counters.loadPersistentData();
         Response responseMsg = target.path("counters/increase").request().header("key", "visits").post(Entity.text("POST"));
         String ent = responseMsg.readEntity(String.class);
         assertEquals("1", ent);
@@ -101,7 +97,7 @@ public class CountersApiTest {
     @Test
     public void shouldNotAddAlreadyExistingName() {
         // given
-        Counters.loadPersistantData();
+        Counters.loadPersistentData();
 
         // when
         Response responseMsg = target.path("counters/add").request().header("key", "visits").post(Entity.text("POST"));
@@ -144,7 +140,7 @@ public class CountersApiTest {
     @Test
     public void shouldReturnAllCounters() {
         // given
-        Counters.loadPersistantData();
+        Counters.loadPersistentData();
 
         // add a new counter
         Response response = target.path("counters/add").request().header("key", "counterc").post(Entity.text("Code:200"));
@@ -174,10 +170,10 @@ public class CountersApiTest {
     @Test
     public void shouldReturnSpecificCounter() {
         // given
-        Counters.loadPersistantData();
+        Counters.loadPersistentData();
 
         // when
-        String resp = target.path("counters/get").queryParam("key", "visits").request().get(String.class);
+        String resp = target.path("counters/get/visits").request().get(String.class);
 
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
@@ -194,20 +190,19 @@ public class CountersApiTest {
     @Test
     public void shouldReturnNullOnGettingCounter() {
         // given
-        Counters.loadPersistantData();
+        Counters.loadPersistentData();
+        expectedException.expect(NotFoundException.class);
+        expectedException.expectMessage("HTTP 404 Not Found");
 
         // when
-        String resp = target.path("counters/get").queryParam("key", "invalidname").request().get(String.class);
-
-        // then
-        assertEquals("null", resp);
+        target.path("counters/get").queryParam("key", "invalidname").request().get(String.class);
     }
 
 
     @Test
     public void shouldReturn404StatusCode() {
         // given
-        Counters.loadPersistantData();
+        Counters.loadPersistentData();
         expectedException.expect(NotFoundException.class);
         expectedException.expectMessage("HTTP 404 Not Found");
 
@@ -221,7 +216,7 @@ public class CountersApiTest {
     @Ignore
     @Test
     public void singleThreadStressTest() {
-        Counters.loadPersistantData();
+        Counters.loadPersistentData();
         int iterations = 100000;
 
         long start = System.currentTimeMillis();

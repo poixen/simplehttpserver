@@ -2,10 +2,10 @@ package com.example;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  * API for accessing the {@link Counters} container via GET and POST
@@ -75,20 +75,32 @@ public class CountersApi {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getAllCounters() {
+    public Response getAllCounters() {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.toJson(Counters.getCounterBeans());
+        String json = gson.toJson(Counters.getCounterBeans());
+
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
 
-    @Path("/get")
+    @Path("/get/{key}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCounter(@QueryParam("key") String key) {
+    public Response getCounter(@PathParam("key") String key) {
+        if (key == null || key.trim().length() == 0) {
+            return Response.serverError().entity("The counter name can not be null or empty").build();
+        }
+
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
-        return gson.toJson(Counters.get(key));
+        String json = gson.toJson(Counters.get(key));
+
+        if (json == null || json.trim().length() == 0 || "null".equals(json)) {
+            return Response.status(Response.Status.NOT_FOUND).entity("Could not find counter name " + key).build();
+        }
+
+        return Response.ok(json, MediaType.APPLICATION_JSON).build();
     }
 
 
