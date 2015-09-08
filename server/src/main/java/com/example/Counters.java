@@ -1,7 +1,7 @@
 package com.example;
 
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Container for accessing counter data
@@ -9,20 +9,21 @@ import java.util.concurrent.ConcurrentMap;
  * @author matthew.lowe
  */
 public class Counters {
-    private static ConcurrentMap<String, Integer> counters = new ConcurrentHashMap<>();
+
+    private static Map<String, CounterBean> counters = Collections.synchronizedMap(new HashMap<String, CounterBean>());
 
     /**
      * Loads persistent data into the container
      */
     public static void loadPersistantData() {
         // can load from a db or any other source here
-        counters.put("visits", 0);
+        counters.put("visits", new CounterBean("visits", 0));
     }
 
     /**
      * Saves persistent data
      */
-    public static void savePersistantData() {
+    public static void savePersistentData() {
         // can save the data to a db or any other source
     }
 
@@ -52,7 +53,7 @@ public class Counters {
      * @return the count mapped to the key. If no key exists
      * then null will be returned as-per the {@link ConcurrentHashMap} API.
      */
-    public static Integer get(final String key) {
+    public static CounterBean get(final String key) {
         return counters.get(key);
     }
 
@@ -65,17 +66,12 @@ public class Counters {
      * @param value count to store
      */
     public static void put(final String key, final int value) {
-        counters.put(key, value);
+        counters.put(key, new CounterBean(key, value));
     }
 
 
-    /**
-     * Returns the {@link String} values of the container
-     *
-     * @return the {@link String} values of the container
-     */
-    public static String toParams() {
-        return counters.toString();
+    public static Collection<CounterBean> getCounterBeans() {
+        return counters.values();
     }
 
 }

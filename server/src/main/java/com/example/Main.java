@@ -43,7 +43,7 @@ public class Main {
                 + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
         System.in.read();
         server.stop();
-        Counters.savePersistantData();
+        Counters.savePersistentData();
     }
 }
 
