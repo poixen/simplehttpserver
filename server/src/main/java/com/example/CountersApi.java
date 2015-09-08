@@ -82,10 +82,10 @@ public class CountersApi {
     }
 
 
-    @Path("/get")
+    @Path("/get/{key}")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public String getCounter(@QueryParam("key") String key) {
+    public String getCounter(@PathParam("key") String key) {
         GsonBuilder builder = new GsonBuilder();
         Gson gson = builder.create();
         return gson.toJson(Counters.get(key));
