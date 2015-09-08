@@ -19,7 +19,7 @@ You can perform 2 GET requests. The first will return all the counter data
 `http://someloaction/counters`
 
 The second will return a specific value of the passed in name
-`http://someloaction/counters/get/insertcounternamehere
+`http://someloaction/counters/get/insertcounternamehere`
 If there is no key with the name passed, you will be informed.
 
 Data is returned in JSON format and include HTTP status codes.
@@ -35,7 +35,7 @@ In the header data
 If there is no key with the name passed, you will be informed.
 
 Add a new counter
-`http://url.com/counters/add`
+`http://someloaction/counters/add`
 In the header data
 `key: insertcounternamehere`
 If there is a problem with adding the new counter, you will be informed.
