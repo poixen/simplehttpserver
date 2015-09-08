@@ -21,6 +21,8 @@ The second will return a specific value of the passed in name
 `http://url.com/counters/get?key=insertcounternamehere
 If there is no key with the name passed, you will be informed.
 
+Data is returned in JSON format.
+
 #POST Requests
 You can use [Advanced Rest Client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo)
 if you need a simple tool to perform POST requests.

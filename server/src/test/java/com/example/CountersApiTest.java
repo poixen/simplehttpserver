@@ -1,5 +1,10 @@
 package com.example;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.junit.*;
 import org.junit.rules.ExpectedException;
@@ -12,7 +17,12 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Response;
 
+import java.lang.reflect.Type;
+import java.util.*;
+import java.util.concurrent.ConcurrentMap;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -135,22 +145,29 @@ public class CountersApiTest {
     public void shouldReturnAllCounters() {
         // given
         Counters.loadPersistantData();
+
+        // add a new counter
         Response response = target.path("counters/add").request().header("key", "counterc").post(Entity.text("Code:200"));
         String ent = response.readEntity(String.class);
         assertEquals("Successfully added counter name: 'counterc'.", ent);
+        assertEquals(200, response.getStatus());
 
+        // increase the new counter
         response = target.path("counters/increase").request().header("key", "counterc").post(Entity.text("Code:200"));
         ent = response.readEntity(String.class);
         assertEquals("1", ent);
         assertEquals(200, response.getStatus());
 
         // when
-        String responseMsg = target.path("counters").request().get(String.class);
+        String resp = target.path("counters").request().get(String.class);
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        Type listType = new TypeToken<ArrayList<CounterBean>>(){}.getType();
+        List<CounterBean> list = gson.fromJson(resp, listType);
 
         // then
-        assertTrue(responseMsg.contains("counterc=1"));
-        assertTrue(responseMsg.contains("visits=0"));
-        assertEquals(200, response.getStatus());
+        assertTrue(list.contains(new CounterBean("counterc", 1)));
+        assertTrue(list.contains(new CounterBean("visits", 0)));
     }
 
 
@@ -160,26 +177,30 @@ public class CountersApiTest {
         Counters.loadPersistantData();
 
         // when
-        CounterBean responseMsg = target.path("counters/get").queryParam("key", "visits").request().get(CounterBean.class);
+        String resp = target.path("counters/get").queryParam("key", "visits").request().get(String.class);
+
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        Type listType = new TypeToken<CounterBean>(){}.getType();
+        CounterBean bean = gson.fromJson(resp, listType);
 
         // then
-        assertEquals("visits", responseMsg.name);
-        assertEquals(0, responseMsg.count);
+        assertTrue(bean.equals(new CounterBean("visits", 0)));
+        assertEquals("visits", bean.getName());
+        assertEquals(0, bean.getCount());
     }
 
 
     @Test
-    public void shouldReturnInvalidMessageOnGettingCounter() {
+    public void shouldReturnNullOnGettingCounter() {
         // given
         Counters.loadPersistantData();
-        expectedException.expect(InternalServerErrorException.class);
-        expectedException.expectMessage("HTTP 500 Request failed.");
 
         // when
-        target.path("counters/get").queryParam("key", "invalidname").request().get(CounterBean.class);
+        String resp = target.path("counters/get").queryParam("key", "invalidname").request().get(String.class);
 
         // then
-
+        assertEquals("null", resp);
     }
 
 

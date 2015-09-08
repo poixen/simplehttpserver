@@ -1,5 +1,9 @@
 package com.example;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -30,9 +34,8 @@ public class CountersApi {
         }
 
         if (Counters.get(key) != null) {
-            Counters.put(key, Counters.get(key) + 1);
-
-            return Integer.toString(Counters.get(key));
+            Counters.put(key, Counters.get(key).getCount() + 1);
+            return Integer.toString(Counters.get(key).getCount());
         }
 
         return "No counter called: " + key;
@@ -71,17 +74,21 @@ public class CountersApi {
      * @return string values for all the counters stored
      */
     @GET
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public String getAllCounters() {
-        return Counters.toParams();
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.toJson(Counters.getCounterBeans());
     }
 
 
     @Path("/get")
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public CounterBean getCounter(@QueryParam("key") String key) {
-        return new CounterBean(key, Counters.get(key));
+    public String getCounter(@QueryParam("key") String key) {
+        GsonBuilder builder = new GsonBuilder();
+        Gson gson = builder.create();
+        return gson.toJson(Counters.get(key));
     }
 
 
