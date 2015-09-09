@@ -27,18 +27,18 @@ public class CountersApi {
      */
     @POST
     @Path("/increase")
-    @Produces(MediaType.TEXT_PLAIN)
-    public String increaseCounter(@HeaderParam("key") String key) {
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response increaseCounter(@HeaderParam("key") String key) {
         if (!isValidParameter(key)) {
-            return "Key can not be null or empty";
+            return Response.serverError().entity("The counter name can not be null or empty").build();
         }
 
         if (Counters.get(key) != null) {
             Counters.put(key, Counters.get(key).getCount() + 1);
-            return Integer.toString(Counters.get(key).getCount());
+            return Response.ok(Integer.toString(Counters.get(key).getCount()), MediaType.APPLICATION_JSON).build();
         }
 
-        return "No counter called: " + key;
+        return Response.status(Response.Status.NOT_FOUND).entity("No counter called: " + key).build();
     }
 
 
@@ -54,17 +54,17 @@ public class CountersApi {
     @POST
     @Path("/add")
     @Produces(MediaType.TEXT_PLAIN)
-    public String addNewCounter(@HeaderParam("key") String key) {
+    public Response addNewCounter(@HeaderParam("key") String key) {
         if (!isValidParameter(key)) {
-            return "Parameter can not be null or empty";
+            return Response.status(Response.Status.FORBIDDEN).entity("The counter name can not be null or empty").build();
         }
 
         if (!Counters.containsKey(key)) {
             Counters.put(key, 0);
-            return "Successfully added counter name: '" + key + "'.";
+            return Response.ok("Successfully added counter name: '" + key + "'.", MediaType.APPLICATION_JSON).build();
         }
 
-        return "Counter name: '" + key + "' is already in use.";
+        return Response.status(Response.Status.FORBIDDEN).entity("Counter name: '" + key + "' is already in use.").build();
     }
 
 
@@ -88,7 +88,7 @@ public class CountersApi {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     public Response getCounter(@PathParam("key") String key) {
-        if (key == null || key.trim().length() == 0) {
+        if (!isValidParameter(key)) {
             return Response.serverError().entity("The counter name can not be null or empty").build();
         }
 
