@@ -53,7 +53,7 @@ public class CountersApi {
      */
     @POST
     @Path("/add")
-    @Produces(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
     public Response addNewCounter(@HeaderParam("key") String key) {
         if (!isValidParameter(key)) {
             return Response.status(Response.Status.FORBIDDEN).entity("The counter name can not be null or empty").build();
