@@ -1,5 +1,5 @@
 # simplehttpserver
-This is a simple http server written in Java for handling GET and POST resquests
+This is a simple http server written in Java for handling GET and POST requests
 
 # Prerequisites
  + Java 
@@ -15,30 +15,27 @@ After that you can run
 This will start the instance that will allow all IPs to connect on port 8080.
 
 # GET Requests
-You can perform 2 GET requests. The first will return all the counter data
+Data is returned in JSON format and include HTTP status codes.
+
++ To return all the counters:
 `http://someloaction/counters`
 
-The second will return a specific value of the passed in name
++ To return a specific counter:
 `http://someloaction/counters/get/insertcounternamehere`
-If there is no key with the name passed, you will be informed.
-
-Data is returned in JSON format and include HTTP status codes.
 
 #POST Requests
 You can use [Advanced Rest Client](https://chrome.google.com/webstore/detail/advanced-rest-client/hgmloofddffdnphfgcellkdfbfbjeloo)
 if you need a simple tool to perform POST requests.
 
-Increase the value of a named counter
++ Increase the value of a named counter
 `http://someloaction/counters/increase`
-In the header data
++ In the header data
 `key: insertcounternamehere`
-If there is no key with the name passed, you will be informed.
 
-Add a new counter
++ Add a new counter
 `http://someloaction/counters/add`
-In the header data
++ In the header data
 `key: insertcounternamehere`
-If there is a problem with adding the new counter, you will be informed.
 
 #Travis
 The project now has Travis support. You can view it [here](https://travis-ci.org/poixen/simplehttpserver).
