@@ -72,11 +72,11 @@ public class CountersApiTest {
 
         // when
         Response responseMsg = target.path("counters/increase").request().header("key", "invalidname").post(Entity.text("POST"));
-        String ent = responseMsg.readEntity(String.class);
 
         // then
+        String ent = responseMsg.readEntity(String.class);
         assertEquals("No counter called: invalidname", ent);
-        assertEquals(200, responseMsg.getStatus());
+        assertEquals(404, responseMsg.getStatus());
     }
 
 
@@ -105,7 +105,7 @@ public class CountersApiTest {
         // then
         String ent = responseMsg.readEntity(String.class);
         assertEquals("Counter name: 'visits' is already in use.", ent);
-        assertEquals(200, responseMsg.getStatus());
+        assertEquals(403, responseMsg.getStatus());
     }
 
 
@@ -118,8 +118,8 @@ public class CountersApiTest {
 
         // then
         String ent = responseMsg.readEntity(String.class);
-        assertEquals("Parameter can not be null or empty", ent);
-        assertEquals(200, responseMsg.getStatus());
+        assertEquals("The counter name can not be null or empty", ent);
+        assertEquals(403, responseMsg.getStatus());
     }
 
 
@@ -132,8 +132,8 @@ public class CountersApiTest {
 
         // then
         String ent = responseMsg.readEntity(String.class);
-        assertEquals("Parameter can not be null or empty", ent);
-        assertEquals(200, responseMsg.getStatus());
+        assertEquals("The counter name can not be null or empty", ent);
+        assertEquals(403, responseMsg.getStatus());
     }
 
 
@@ -203,13 +203,14 @@ public class CountersApiTest {
     public void shouldReturn404StatusCode() {
         // given
         Counters.loadPersistentData();
-        expectedException.expect(NotFoundException.class);
-        expectedException.expectMessage("HTTP 404 Not Found");
 
         // when
-        target.path("counters/get/incremant").queryParam("key", "invalidname").request().get(String.class);
+        Response response = target.path("counters/get/sdkjfalsfdkj").queryParam("key", "invalidname").request().get(Response.class);
 
         // then
+        String ent = response.readEntity(String.class);
+        assertEquals("Could not find counter name sdkjfalsfdkj", ent);
+        assertEquals(404, response.getStatus());
     }
 
 
